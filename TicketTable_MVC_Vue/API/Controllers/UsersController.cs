@@ -6,6 +6,8 @@ using UserTable_MVC_Vue.Models.Mappers;
 
 namespace TicketTable_MVC_Vue.API.Controllers
 {
+    [ApiController]
+    [Route("api/v1/[controller]")]
     public class UsersController : ControllerBase
     {
         private readonly IRepository<User> _repositoryUsers;

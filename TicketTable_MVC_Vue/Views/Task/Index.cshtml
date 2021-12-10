@@ -1,0 +1,98 @@
+﻿@{
+    ViewData["Title"] = "TasksTable Page";
+}
+
+<div id="app">
+    <b-container>
+          <b-row>
+             <b-col>
+                 <b-button variant="primary" href="/Task/Create/">Create new task</b-button>
+             </b-col>
+          </b-row>
+        <b-table striped hover v-on:row-dblclicked="onDbClick"  :items="myProvider" :fields="fields"></b-table>
+    </b-container>
+</div>
+
+@section scripts {
+    <script>
+
+        function formatDate(date) {
+            date = new Date(date);
+            var dd = date.getDate();
+            if (dd < 10) dd = '0' + dd;
+
+            var mm = date.getMonth() + 1;
+            if (mm < 10) mm = '0' + mm;
+
+            var yyyy = date.getFullYear();
+
+            if (yyyy == 0001)
+                return "";
+            else
+                return yyyy + '-' + mm + '-' + dd;
+        };
+
+        var App = new Vue(
+        {
+            el: "#app",
+            data() 
+            {
+                return {
+                    fields: [
+                      {
+                        key: 'opened_at',
+                      },
+                      {
+                        key: 'description',
+                      },
+                      {
+                        key: 'author',
+                      },
+                      {
+                        key: 'projects_name',
+                      },
+                      {
+                        key: 'status',
+                      },
+                      {
+                        key: 'closed_at',
+                      },
+                      {
+                        key: 'closed_by',
+                      }
+                    ]
+                }
+            },
+            methods: {
+                myProvider () {
+                    let promise = axios.get('/api/v1/Tickets/WithInfo')
+
+                    return promise.then((result) => {
+                        let tickets = result.data;
+                        const items = [];
+                        tickets.forEach(function(ticket){
+                            items.push({ opened_at: formatDate(ticket.openedAt),
+                                description: ticket.description,
+                                author: ticket.authorFullName, 
+                                projects_name: ticket.projectName,
+                                status: ticket.ticketStatusName,
+                                closed_at: formatDate(ticket.closedAt),
+                                closed_by: ticket.closedByFullName,
+                                id: ticket.id
+                            });
+                        });
+                        return(items)
+                    })
+                    .catch(error => {
+                            return []
+                    })    
+                },
+                onDbClick(item, index, event){
+                    console.log("redirect");
+                    var url = "/Task/Update/" + item.id; 
+                    window.location.href = url; 
+                }
+            }
+        })
+    </script>
+}

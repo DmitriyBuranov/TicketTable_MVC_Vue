@@ -10,7 +10,7 @@ namespace TicketTable_MVC_Vue.DAL
 
         public virtual DbSet<Ticket> Tickets { get; set; }
 
-        public virtual DbSet<Project> Prokects { get; set; }
+        public virtual DbSet<Project> Projects { get; set; }
 
         public virtual DbSet<TicketStatus> TicketStatuses { get; set; }
         
@@ -29,8 +29,7 @@ namespace TicketTable_MVC_Vue.DAL
                 entity.HasOne(d => d.Author)
                   .WithMany(p => p.TicketsCreatedByUser)
                   .HasForeignKey(d => d.AuthorUserId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
-                  .HasConstraintName("FK_Tickets_Author");
+                  .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
             modelBuilder.Entity<Ticket>(entity =>
@@ -38,8 +37,7 @@ namespace TicketTable_MVC_Vue.DAL
                 entity.HasOne(d => d.ClosedBy)
                   .WithMany(p => p.TicketsClosedByUser)
                   .HasForeignKey(d => d.ClosedByUserId)
-                  .OnDelete(DeleteBehavior.ClientSetNull)
-                  .HasConstraintName("FK_Tickets_ClosedBy");
+                  .OnDelete(DeleteBehavior.ClientSetNull);
             });
         }
     }

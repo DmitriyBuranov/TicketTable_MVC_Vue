@@ -5,6 +5,8 @@ using TicketTable_MVC_Vue.Models.Dto;
 
 namespace ProjectTable_MVC_Vue.API.Controllers
 {
+    [ApiController]
+    [Route("api/v1/[controller]")]
     public class ProjectsController : ControllerBase
 
     {

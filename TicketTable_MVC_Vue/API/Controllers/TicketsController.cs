@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 using TicketTable_MVC_Vue.Dal.Abstractions;
 using TicketTable_MVC_Vue.Models;
 using TicketTable_MVC_Vue.Models.Dto;
 using TicketTable_MVC_Vue.Models.Mappers;
+using TicketTable_MVC_Vue.Models.Responses;
 
 namespace TicketTable_MVC_Vue.API.Controllers
 {
@@ -98,6 +100,36 @@ namespace TicketTable_MVC_Vue.API.Controllers
             await _repositoryTickets.RemoveAsync(entity);
 
             return Ok();
+        }
+
+        /// <summary>
+        /// Gets List of Tickets with full info
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns> TicketWithInfoResponse</returns>
+        [HttpGet("WithInfo")]
+        public async Task<IActionResult> GetAllTicketsWithClientsAsync()
+        {
+            Expression<Func<Ticket, bool>> expression = x => true; 
+
+            var entities = await _repositoryTickets
+                .GetManySelectAsync<TicketWithInfoResponse>(expression, entity => new TicketWithInfoResponse
+                {
+                    Id = entity.Id,
+                    ProjectName = entity.Project.Name,
+                    ProjectId = entity.ProjectId,
+                    Description = entity.Description,
+                    TicketStatusName = entity.TicketStatus.Name,
+                    TicketStatusId = entity.TicketStatusId,
+                    OpenedAt = entity.OpenedAt,
+                    ClosedAt = entity.ClosedAt,
+                    AuthorFullName = entity.Author.FullName,
+                    AuthorUserId = entity.AuthorUserId,
+                    ClosedByFullName = entity.ClosedBy.FullName,
+                    ClosedByUserId = entity.ClosedByUserId
+                });
+
+            return Ok(entities);
         }
     }
 

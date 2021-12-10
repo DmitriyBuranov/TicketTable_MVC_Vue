@@ -18,5 +18,7 @@ namespace TicketTable_MVC_Vue.Dal.Abstractions
 
         Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate);
 
+        Task<List<Ts>> GetManySelectAsync<Ts>(Expression<Func<T, bool>> where, Expression<Func<T, Ts>> select);
+
     }
 }
